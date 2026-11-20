@@ -13,7 +13,9 @@ import java.util.function.Predicate;
 public class Main {
     static void main() {
         JsonSerializer<BankAccount> bankAccountJsonSerializer=new JsonSerializer<>();
-        AccountRepositoryImpl accountRepository=new AccountRepositoryImpl();
+        // ---------------SINGLOTTON ----------------
+        AccountRepositoryImpl accountRepository=AccountRepositoryImpl.getInstance();
+        // ------------------------------------------
         accountRepository.populateData();
         List<BankAccount> bankAccounts = accountRepository.searchAccounts(new Predicate<BankAccount>() {
             @Override

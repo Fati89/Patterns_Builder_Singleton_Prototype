@@ -3,12 +3,21 @@ package benakka.model;
 import benakka.enums.AccountStatus;
 import benakka.enums.AccountType;
 
-public class BankAccount {
+public class BankAccount implements Cloneable {
     private Long accountId;
     private double balance;
     private String currency;
     private AccountType type;
     private AccountStatus status;
+    private Costumer costumer;
+
+    public Costumer getCostumer() {
+        return costumer;
+    }
+
+    public void setCostumer(Costumer costumer) {
+        this.costumer = costumer;
+    }
 
     @Override
     public String toString() {
@@ -18,6 +27,7 @@ public class BankAccount {
                 ", currency='" + currency + '\'' +
                 ", type=" + type +
                 ", status=" + status +
+                ", costumer=" + costumer +
                 '}';
     }
 
@@ -106,5 +116,12 @@ public class BankAccount {
         public BankAccount build(){
             return this.bankAccount;
         }
+    }
+
+    @Override
+    public BankAccount clone() throws CloneNotSupportedException {
+        BankAccount bankAccount = (BankAccount) super.clone();
+        bankAccount.setCostumer(this.costumer.clone());
+        return  bankAccount;
     }
 }

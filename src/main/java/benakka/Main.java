@@ -5,16 +5,32 @@ import benakka.enums.AccountType;
 import benakka.model.BankAccount;
 import benakka.model.BankDirector;
 import benakka.repository.AccountRepositoryImpl;
+import benakka.util.JsonSerializer;
 
 import java.util.List;
+import java.util.function.Predicate;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     static void main() {
+        JsonSerializer<BankAccount> bankAccountJsonSerializer=new JsonSerializer<>();
         AccountRepositoryImpl accountRepository=new AccountRepositoryImpl();
         accountRepository.populateData();
-        List<BankAccount> bankAccounts = accountRepository.findAll();
-        bankAccounts.forEach(System.out::println);
+        List<BankAccount> bankAccounts = accountRepository.searchAccounts(new Predicate<BankAccount>() {
+            @Override
+            public boolean test(BankAccount bankAccount) {
+                return bankAccount.getType().equals(AccountType.CURRENT_ACCOUNT);
+            }
+        });
+        bankAccounts.stream()
+                .map(bankAccountJsonSerializer::toJson)
+                .forEach(System.out::println);
+
+        System.out.println("=================");
+        BankAccount account = accountRepository.findById(1L).orElse(null);
+        if(account!=null){
+            System.out.println(bankAccountJsonSerializer.toJson(account));
+        }
     }
+
+
 }
